@@ -81,28 +81,30 @@ const CountdownDisplay = () => {
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center">
-      <div className="w-full max-w-[1200px] px-8">
-        <div className="mb-4">
+      <div className="flex flex-col items-center px-8">
+        <div className="mb-4 text-center">
           <h1 className="text-6xl md:text-8xl font-bold leading-none">
             {displayedDays} DAYS
           </h1>
           <h2 className="text-xl md:text-3xl font-bold">UNTIL TRUMP LEAVES THE WHITE HOUSE</h2>
         </div>
         
-        <div 
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: `${baseSpacing}px`,
-            width: `${containerWidth}px`
-          }}
-        >
-          {[...Array(totalDays)].map((_, index) => (
-            <div
-              key={index}
-              style={getDotStyle(index)}
-            />
-          ))}
+        <div className="flex justify-center">
+          <div 
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: `${baseSpacing}px`,
+              width: `${containerWidth}px`
+            }}
+          >
+            {[...Array(totalDays)].map((_, index) => (
+              <div
+                key={index}
+                style={getDotStyle(index)}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>
