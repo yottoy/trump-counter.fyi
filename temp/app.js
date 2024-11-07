@@ -19,7 +19,7 @@ const CountdownDisplay = () => {
   };
 
   const { elapsedDays, remainingDays } = getElapsedAndRemainingDays();
-  const totalDays = 1536; // Fixed total
+  const totalDays = remainingDays + elapsedDays; // Calculate total based on current date
   const democratDays = 75;
   const baseDotSize = 10;
   const baseSpacing = 5;
@@ -33,17 +33,18 @@ const CountdownDisplay = () => {
 
   React.useEffect(() => {
     if (animationPhase === 1) {
+      const targetDays = remainingDays; // The number we want to count up to
       const interval = setInterval(() => {
         setDisplayedDays(prev => {
-          const next = prev + 32;
-          if (next >= remainingDays) {
+          const next = prev + Math.ceil(targetDays / 48); // Increase by larger steps for smoother animation
+          if (next >= targetDays) {
             clearInterval(interval);
             setTimeout(() => setAnimationPhase(2), 100);
-            return remainingDays;
+            return targetDays;
           }
           return next;
         });
-      }, 1000 / (remainingDays / 32));
+      }, 50); // Shorter interval for smoother animation
       return () => clearInterval(interval);
     }
   }, [animationPhase, remainingDays]);
