@@ -80,9 +80,9 @@ const CountdownDisplay = () => {
   const containerWidth = (dotsPerRow * (baseDotSize)) + ((dotsPerRow - 1) * baseSpacing);
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center">
-      <div className="flex flex-col items-center px-8">
-        <div className="mb-4 text-center">
+    <div className="min-h-screen bg-white flex flex-col justify-center">
+      <div className="flex flex-col px-8">
+        <div className="mb-4 text-left" style={{ maxWidth: '100%', overflowWrap: 'break-word' }}>
           <h1 className="text-6xl md:text-8xl font-bold leading-none">
             {displayedDays} DAYS
           </h1>
@@ -95,7 +95,9 @@ const CountdownDisplay = () => {
               display: 'flex',
               flexWrap: 'wrap',
               gap: `${baseSpacing}px`,
-              width: `${containerWidth}px`
+              width: `${containerWidth}px`,
+              maxWidth: '100%',
+              overflow: 'hidden'
             }}
           >
             {[...Array(totalDays)].map((_, index) => (
