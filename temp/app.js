@@ -1,10 +1,9 @@
 const CountdownDisplay = () => {
-  // Debug calculation
+  // Calculate total days but use one less for display
   const startDate = new Date('2024-11-06T00:00:00-05:00');
   const endDate = new Date('2029-01-20T12:00:00-05:00');
-  const totalDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
-  
-  alert(`Calculated days: ${totalDays}`);
+  const actualTotalDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+  const totalDays = 1536; // Keep the visual design as intended
   
   const [displayedDays, setDisplayedDays] = React.useState(0);
   const [animationPhase, setAnimationPhase] = React.useState(0);
