@@ -4,8 +4,8 @@ const CountdownDisplay = () => {
   const [lastVisibleIndex, setLastVisibleIndex] = React.useState(-1);
   const [fadedDots, setFadedDots] = React.useState(new Set());
   
-  // Calculate dates and days
-  const getElapsedAndRemainingDays = () => {
+  // Calculate all date-related values upfront
+  const dates = React.useMemo(() => {
     const startDate = new Date('2024-11-06T00:00:00-05:00'); // Election Day 2024
     const endDate = new Date('2029-01-20T12:00:00-05:00');   // Inauguration Day 2029
     const now = new Date();
@@ -13,13 +13,13 @@ const CountdownDisplay = () => {
     // Set time to midnight for consistent day calculations
     now.setHours(0, 0, 0, 0);
     const elapsedDays = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
-    const remainingDays = Math.ceil((endDate - now) / (1000 * 60 * 60 * 24));
+    const totalDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+    const remainingDays = totalDays - elapsedDays;
     
-    return { elapsedDays, remainingDays };
-  };
-
-  const { elapsedDays, remainingDays } = getElapsedAndRemainingDays();
-  const totalDays = remainingDays + elapsedDays; // Calculate total based on current date
+    return { elapsedDays, remainingDays, totalDays };
+  }, []);
+  
+  // Constants
   const democratDays = 75;
   const baseDotSize = 10;
   const baseSpacing = 5;
@@ -33,21 +33,20 @@ const CountdownDisplay = () => {
 
   React.useEffect(() => {
     if (animationPhase === 1) {
-      const targetDays = remainingDays; // The number we want to count up to
       const interval = setInterval(() => {
         setDisplayedDays(prev => {
-          const next = prev + Math.ceil(targetDays / 48); // Increase by larger steps for smoother animation
-          if (next >= targetDays) {
+          const next = prev + 32;
+          if (next >= dates.remainingDays) {
             clearInterval(interval);
             setTimeout(() => setAnimationPhase(2), 100);
-            return targetDays;
+            return dates.remainingDays;
           }
           return next;
         });
-      }, 50); // Shorter interval for smoother animation
+      }, 1000 / (dates.remainingDays / 32));
       return () => clearInterval(interval);
     }
-  }, [animationPhase, remainingDays]);
+  }, [animationPhase, dates.remainingDays]);
 
   // Dot animation
   React.useEffect(() => {
@@ -56,15 +55,15 @@ const CountdownDisplay = () => {
       
       const animate = () => {
         frame++;
-        if (frame * 20 < totalDays) {
+        if (frame * 20 < dates.totalDays) {
           setLastVisibleIndex(frame * 20);
           requestAnimationFrame(animate);
         } else {
-          setLastVisibleIndex(totalDays - 1);
+          setLastVisibleIndex(dates.totalDays - 1);
           setTimeout(() => {
             // Create set of all past days
             const pastDays = new Set();
-            for (let i = 0; i <= elapsedDays; i++) {
+            for (let i = 0; i <= dates.elapsedDays; i++) {
               pastDays.add(i);
             }
             setFadedDots(pastDays);
@@ -75,12 +74,12 @@ const CountdownDisplay = () => {
       
       requestAnimationFrame(animate);
     }
-  }, [animationPhase, totalDays, elapsedDays]);
+  }, [animationPhase, dates.totalDays, dates.elapsedDays]);
 
   const getDotStyle = (index) => {
     const isDemocrat = index < democratDays;
-    const isPast = index <= elapsedDays;
-    const isToday = index === elapsedDays + 1; // Today is the day after elapsed days
+    const isPast = index <= dates.elapsedDays;
+    const isToday = index === dates.elapsedDays + 1;
     const isScaled = isToday && animationPhase === 3;
     const isFaded = isPast;
     
@@ -135,7 +134,7 @@ const CountdownDisplay = () => {
               position: 'relative'
             }}
           >
-            {[...Array(totalDays)].map((_, index) => (
+            {[...Array(dates.totalDays)].map((_, index) => (
               <div
                 key={index}
                 style={getDotStyle(index)}
