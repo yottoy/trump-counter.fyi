@@ -62,13 +62,14 @@ const CountdownDisplay = () => {
     const isPast = index < 1;
     const isToday = index === 1;
     const isScaled = isToday && animationPhase === 3;
+    const isFaded = isPast || fadedDots.has(index);
     
     const baseStyle = {
       width: `${baseDotSize}px`,
       height: `${baseDotSize}px`,
       backgroundColor: isDemocrat ? '#0000FF' : '#FF0000',
       borderRadius: '50%',
-      opacity: index <= lastVisibleIndex ? (fadedDots.has(index) ? '0.5' : '1') : 0,
+      opacity: index <= lastVisibleIndex ? (isFaded ? 0.5 : 1) : 0,
       transition: isToday 
         ? 'all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)' 
         : 'opacity 0.15s ease',
@@ -82,7 +83,6 @@ const CountdownDisplay = () => {
         transform: `scale(${todayScale})`,
         transformOrigin: 'center',
         zIndex: 1,
-        // Calculate the exact position to prevent pushing other dots
         left: `${(index % dotsPerRow) * (baseDotSize + baseSpacing)}px`,
         top: `${Math.floor(index / dotsPerRow) * (baseDotSize + baseSpacing)}px`,
       };
@@ -94,8 +94,8 @@ const CountdownDisplay = () => {
   const containerWidth = (dotsPerRow * (baseDotSize + baseSpacing));
 
   return (
-    <div className="min-h-screen bg-white flex flex-col justify-center">
-      <div className="flex flex-col max-w-full mx-auto" style={{ width: `${containerWidth}px` }}>
+    <div className="min-h-screen bg-white flex flex-col items-center justify-center">
+      <div style={{ width: `${containerWidth}px`, maxWidth: '100%' }}>
         <div className="mb-4">
           <h1 className="text-6xl md:text-8xl font-bold leading-none">
             {displayedDays} DAYS
