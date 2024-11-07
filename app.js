@@ -80,15 +80,15 @@ const CountdownDisplay = () => {
   const containerWidth = (dotsPerRow * (baseDotSize)) + ((dotsPerRow - 1) * baseSpacing);
 
   return (
-    <div className="min-h-screen bg-white flex flex-col justify-center p-8">
-      <div className="mb-4">
-        <h1 className="text-6xl md:text-8xl font-bold leading-none">
-          {displayedDays} DAYS
-        </h1>
-        <h2 className="text-xl md:text-3xl font-bold">UNTIL TRUMP LEAVES THE WHITE HOUSE</h2>
-      </div>
-      
-      <div className="flex">
+    <div className="min-h-screen bg-white flex flex-col items-center justify-center">
+      <div className="w-full max-w-[1200px] px-8">
+        <div className="mb-4">
+          <h1 className="text-6xl md:text-8xl font-bold leading-none">
+            {displayedDays} DAYS
+          </h1>
+          <h2 className="text-xl md:text-3xl font-bold">UNTIL TRUMP LEAVES THE WHITE HOUSE</h2>
+        </div>
+        
         <div 
           style={{
             display: 'flex',
