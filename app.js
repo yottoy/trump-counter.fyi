@@ -61,19 +61,23 @@ const CountdownDisplay = () => {
     const isDemocrat = index < democratDays;
     const isPast = index < 1;
     const isToday = index === 1;
+    const isScaled = isToday && animationPhase === 3;
+    
+    const dotSize = isScaled ? baseDotSize * todayScale : baseDotSize;
+    const marginOffset = isScaled ? (baseDotSize * todayScale - baseDotSize) / 2 : 0;
     
     return {
-      width: `${baseDotSize}px`,
-      height: `${baseDotSize}px`,
+      width: `${dotSize}px`,
+      height: `${dotSize}px`,
       backgroundColor: isDemocrat ? '#0000FF' : '#FF0000',
       borderRadius: '50%',
       opacity: index <= lastVisibleIndex ? (fadedDots.has(index) ? '0.5' : '1') : 0,
       transition: isToday 
         ? 'all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)' 
         : 'opacity 0.15s ease',
-      transform: isToday && animationPhase === 3 ? `scale(${todayScale})` : 'scale(1)',
-      transformOrigin: 'center',
-      display: 'block'
+      margin: `${baseSpacing/2 - marginOffset}px ${baseSpacing/2}px`,
+      position: 'relative',
+      zIndex: isScaled ? 1 : 'auto'
     };
   };
 
@@ -94,10 +98,11 @@ const CountdownDisplay = () => {
             style={{
               display: 'flex',
               flexWrap: 'wrap',
-              gap: `${baseSpacing}px`,
+              gap: 0,
               width: `${containerWidth}px`,
               maxWidth: '100%',
-              overflow: 'hidden'
+              overflow: 'hidden',
+              padding: `${baseDotSize * (todayScale - 1)/2}px`
             }}
           >
             {[...Array(totalDays)].map((_, index) => (
