@@ -82,33 +82,36 @@ const CountdownDisplay = () => {
         transform: `scale(${todayScale})`,
         transformOrigin: 'center',
         zIndex: 1,
+        // Calculate the exact position to prevent pushing other dots
+        left: `${(index % dotsPerRow) * (baseDotSize + baseSpacing)}px`,
+        top: `${Math.floor(index / dotsPerRow) * (baseDotSize + baseSpacing)}px`,
       };
     }
 
     return baseStyle;
   };
 
-  const containerWidth = (dotsPerRow * (baseDotSize)) + ((dotsPerRow - 1) * baseSpacing);
+  const containerWidth = (dotsPerRow * (baseDotSize + baseSpacing));
 
   return (
     <div className="min-h-screen bg-white flex flex-col justify-center">
-      <div className="flex flex-col px-8">
-        <div className="mb-4 text-left" style={{ maxWidth: '100%', overflowWrap: 'break-word' }}>
+      <div className="flex flex-col max-w-full mx-auto" style={{ width: `${containerWidth}px` }}>
+        <div className="mb-4">
           <h1 className="text-6xl md:text-8xl font-bold leading-none">
             {displayedDays} DAYS
           </h1>
-          <h2 className="text-xl md:text-3xl font-bold">UNTIL TRUMP LEAVES THE WHITE HOUSE</h2>
+          <h2 className="text-xl md:text-3xl font-bold">
+            UNTIL TRUMP LEAVES THE WHITE HOUSE
+          </h2>
         </div>
         
-        <div className="flex justify-center">
+        <div className="relative">
           <div 
             style={{
               display: 'flex',
               flexWrap: 'wrap',
               gap: 0,
-              width: `${containerWidth}px`,
-              maxWidth: '100%',
-              overflow: 'hidden',
+              width: '100%',
               position: 'relative'
             }}
           >
